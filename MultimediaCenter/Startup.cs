@@ -1,3 +1,5 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -12,6 +14,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using MultimediaCenter.Data;
 using MultimediaCenter.Models;
+using MultimediaCenter.Validators;
+using MultimediaCenter.ViewModels;
 using System;
 using System.IO;
 using System.Linq;
@@ -31,7 +35,7 @@ namespace MultimediaCenter
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            
+
             services.AddAutoMapper(typeof(MappingProfile));
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
@@ -47,7 +51,8 @@ namespace MultimediaCenter
 
             services.AddAuthentication()
                 .AddIdentityServerJwt();
-            services.AddControllersWithViews();
+            services.AddControllersWithViews()
+                .AddFluentValidation();
             services.AddRazorPages();
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -79,6 +84,9 @@ namespace MultimediaCenter
                 c.IncludeXmlComments(xmlPath);
 
             });
+
+            services.AddTransient<IValidator<MovieViewModel>, MovieValidator>();
+            services.AddTransient<IValidator<CommentViewModel>, CommentValidator>();
             
         }
 
