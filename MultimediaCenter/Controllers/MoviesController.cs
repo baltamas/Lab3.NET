@@ -28,7 +28,11 @@ namespace MultimediaCenter.Controllers
             _logger = logger;
             _mapper = mapper; 
         }
-
+        /// <summary>
+        /// Returns a movie with comments, based on the given movie ID
+        /// </summary>
+        /// <param name="id">The id of the movie</param>
+        /// <returns>A list of comments from a movie</returns>
         [HttpGet("{id}/Comments")]
         public ActionResult<IEnumerable<MovieWithCommentsViewModels>> GetCommentsForMovies (int id)
         {
@@ -88,7 +92,12 @@ namespace MultimediaCenter.Controllers
             _logger.LogInformation(query_v3.ToQueryString());
             return query_v3.ToList();
         }
-
+        /// <summary>
+        /// Posts a comment for a movie
+        /// </summary>
+        /// <param name="id">ID of the movie</param>
+        /// <param name="comment"></param>
+        /// <returns>A comment</returns>
         [HttpPost("{id}/Comments")]
         public IActionResult PostCommentForMovie(int id, CommentViewModel comment)
         {
@@ -106,7 +115,12 @@ namespace MultimediaCenter.Controllers
 
             return Ok();
         }
-
+        /// <summary>
+        /// Returns a list of movies filtered by the date they're added to DB, and ordered desc. by their release year. 
+        /// </summary>
+        /// <param name="fromDate">The earliest value of movie's DateAdded may have</param>
+        /// <param name="toDate">The latest value of movie's DateAdded may have</param>
+        /// <returns>The list of the filtered and ordered movies</returns>
         [HttpGet]
         [Route("filter2")]
         public async Task<ActionResult<IEnumerable<MovieViewModel>>> FilterByAddedDate (DateTime? fromDate, DateTime? toDate)
@@ -120,6 +134,10 @@ namespace MultimediaCenter.Controllers
             return Ok(filteredMovies);
         }
 
+        /// <summary>
+        /// Returns a list of movies
+        /// </summary>
+        /// <returns>All the movies</returns>
         // GET: api/Movies
         [HttpGet]
         public async Task<ActionResult<IEnumerable<MovieViewModel>>> GetMovies()
@@ -128,6 +146,11 @@ namespace MultimediaCenter.Controllers
             return movies;
         }
 
+        /// <summary>
+        /// Returns a movie with the given ID
+        /// </summary>
+        /// <param name="id">ID of the movie</param>
+        /// <returns>Returns the movie or error: "Not Found" </returns>
         // GET: api/Movies/5
         [HttpGet("{id}")]
         public async Task<ActionResult<MovieViewModel>> GetMovie(int id)
@@ -144,6 +167,12 @@ namespace MultimediaCenter.Controllers
             return movieViewModel;
         }
 
+        /// <summary>
+        /// Updates a movie
+        /// </summary>
+        /// <param name="id">ID of the movie</param>
+        /// <param name="movie">The movie</param>
+        /// <returns>NoContent if movie was updated, BadRequest if the Id is not valid, or NotFound if movie was not found (based on Id)</returns>
         // PUT: api/Movies/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
@@ -175,6 +204,12 @@ namespace MultimediaCenter.Controllers
             return NoContent();
         }
 
+
+        /// <summary>
+        /// Adds a movie to DB
+        /// </summary>
+        /// <param name="movie">The movie</param>
+        /// <returns>If it was added, returns the movie, else BadRequest</returns>
         // POST: api/Movies
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
@@ -186,6 +221,12 @@ namespace MultimediaCenter.Controllers
             return CreatedAtAction("GetMovie", new { id = movie.Id }, movie);
         }
 
+
+        /// <summary>
+        /// Deletes a movie based on ID
+        /// </summary>
+        /// <param name="id">ID of the movie</param>
+        /// <returns>If the movie was successfully removed returns NoContent, else NotFound</returns>
         // DELETE: api/Movies/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMovie(int id)
@@ -201,6 +242,13 @@ namespace MultimediaCenter.Controllers
 
             return NoContent();
         }
+
+        /// <summary>
+        /// Updates a comment
+        /// </summary>
+        /// <param name="commentId">The comment ID</param>
+        /// <param name="comment">the comment</param>
+        /// <returns>If comment updates: NoContent, BadRequest if the ID is not valid, or NotFound if comment was not found</returns>
 
         [HttpPut("{id}/Comments/{commentId}")]
         public async Task<IActionResult> PutComment(int commentId, CommentViewModel comment)
@@ -231,6 +279,11 @@ namespace MultimediaCenter.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Deletes a comment
+        /// </summary>
+        /// <param name="commentId">ID of the comment</param>
+        /// <returns>NoContent if the comment was deleted successfully, or NotFound</returns>
         [HttpDelete("{id}/Comments/{commentId}")]
         public async Task<IActionResult> DeleteComment(int commentId)
         {
